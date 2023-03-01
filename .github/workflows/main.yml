@@ -34,16 +34,16 @@ jobs:
         run: |
           echo ${{ github.sha }}
           gatsby build
-          sed -i "s/%%VERSION%%/${{ github.sha }}/" ./my-app/public/index.html
-        working-directory: ./my-app
+          sed -i "s/%%VERSION%%/${{ github.sha }}/" ./public/index.html
+        
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
           name: build
           path: |
-            ./my-app/public
-            ./my-app/.cache
+            ./public
+            ./.cache
 
   test:
     runs-on: ubuntu-latest
