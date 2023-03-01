@@ -94,7 +94,7 @@ jobs:
 
       - name: Deploy to review environment
         run: surge --project "./public" --domain ${{ env.HOMOLOG_DOMAIN }}
-        working-directory: . 
+        working-directory: website 
 
   deploy-staging:
     runs-on: ubuntu-latest
@@ -112,7 +112,7 @@ jobs:
 
       - name: Deploy to staging environment
         run: surge --project ./public --domain ${{ env.HOMOLOG_DOMAIN }}
-        working-directory: . 
+        working-directory: website 
 
   deploy-production:
     runs-on: ubuntu-latest
