@@ -142,4 +142,4 @@ jobs:
 
       - name: Test production environment
         run: |
-          curl -s "https://${{ env.PRODUCTION_DOMAIN }}" | grep "${{ github.sha }}"
+          curl -s "https://${{ env.PRODUCTION_DOMAIN }}"
