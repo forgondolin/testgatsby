@@ -87,8 +87,6 @@ jobs:
       name: review/${{ github.head_ref }}
       url: https://rapid-cave-${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
       - name: Download artifacts
         uses: actions/download-artifact@v2
       - name: Install Surge
