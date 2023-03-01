@@ -50,10 +50,10 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build
+          name: website
           path: | 
-            ./public
-            ./.cache
+           public
+           ./.cache
 
   test:
     needs: build
@@ -62,15 +62,10 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: build
-          path: ./public
-
+          name: website
       - name: Test artifact
         run: |
           grep -q "Gatsby" ./public/index.html
-        working-directory: ./public
-      
-
       - name: Test website
         run: |
           npm install
@@ -78,7 +73,7 @@ jobs:
           gatsby serve &
           sleep 3
           curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
-        working-directory: ./public
+        working-directory: .
         continue-on-error: true  
         
 
@@ -97,7 +92,7 @@ jobs:
         run: npm install --global surge
 
       - name: Deploy to review environment
-        run: surge --project "${{ github.workspace }}/public" --domain ${{ env.HOMOLOG_DOMAIN }}
+        run: surge --project "./public" --domain ${{ env.HOMOLOG_DOMAIN }}
         
 
   deploy-staging:
