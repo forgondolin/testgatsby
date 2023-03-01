@@ -73,7 +73,7 @@ jobs:
           gatsby serve &
           sleep 3
           curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
-        working-directory: .
+        working-directory: "${{ github.workspace }}"
         continue-on-error: true  
         
 
