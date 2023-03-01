@@ -85,7 +85,7 @@ jobs:
     if: github.event_name == 'pull_request'
     environment:
       name: review/${{ github.head_ref }}
-      url: https://rapid-cave-hml${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
+      url: http://rapid-cave-hml${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
@@ -142,4 +142,4 @@ jobs:
 
       - name: Test production environment
         run: |
-          curl -s "https://${{ env.PRODUCTION_DOMAIN }}"
+          curl -s "http://http://rapid-cave.surge.sh/"
