@@ -52,8 +52,6 @@ jobs:
           path: | 
             ./public
             ./.cache
-          if: ${{ steps.build.outcome == 'success' }}
-
 
   test:
     needs: build
