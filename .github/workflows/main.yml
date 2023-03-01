@@ -40,10 +40,10 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: website
+          name: build
           path: | 
-            ./website/public
-            ./website/.cache
+            ./public
+            ./.cache
           if: ${{ steps.build.outcome == 'success' }}
 
 
@@ -54,13 +54,13 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: website
-          path: ./website/public
+          name: test
+          path: ./public
 
       - name: Test artifact
         run: |
           grep -q "Gatsby" ./public/index.html
-        working-directory: ./website/public
+        working-directory: ./public
       
 
       - name: Test website
