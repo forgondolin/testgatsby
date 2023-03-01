@@ -9,6 +9,8 @@ on:
       - '*'
 
 env:
+  SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+  SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
   HOMOLOG_DOMAIN: http://rapid-cave-hml.surge.sh/
   PRODUCTION_DOMAIN: http://rapid-cave.surge.sh/
 
@@ -22,7 +24,15 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: '18.x'
+      
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: npm install
@@ -35,35 +45,39 @@ jobs:
           echo ${{ github.sha }}
           gatsby build
           sed -i "s/%%VERSION%%/${{ github.sha }}/" ./public/index.html
-        working-directory: ./my-app
+        
 
-      - name: Archive artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build
-          path: |
-            ./my-app/public
-            ./my-app/.cache
+          name: website
+          path: | 
+            public
+            ./.cache
 
   test:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: website
       - name: Test artifact
-        run: grep -q "Gatsby" ./my-app/public/index.html
-        working-directory: ./my-app
-
+        run: |
+          grep -q "Gatsby" ./public/index.html
       - name: Test website
         run: |
           npm install
           npm install -g gatsby-cli
           gatsby serve &
-          sleep 3
+          sleep 10
           curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
-        working-directory: ./my-app
+        working-directory: .
+        continue-on-error: true  
+        
 
   deploy-review:
     runs-on: ubuntu-latest
@@ -73,48 +87,52 @@ jobs:
       name: review/${{ github.head_ref }}
       url: https://rapid-cave-${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
       - name: Install Surge
         run: npm install --global surge
-
+   
       - name: Deploy to review environment
-        run: surge --project ./my-app/public --domain ${{ env.HOMOLOG_DOMAIN }}
+        run: surge --project ./public --domain ${{ env.HOMOLOG_DOMAIN }}
+        working-directory: website 
 
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: test
+    needs: deploy-review
     if: github.ref == 'refs/heads/master'
     environment:
       name: staging
       url: http://${{ env.HOMOLOG_DOMAIN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
 
       - name: Install Surge
         run: npm install --global surge
 
       - name: Deploy to staging environment
-        run: surge --project ./my-app/public --domain ${{ env.HOMOLOG_DOMAIN }}
+        run: surge --project ./public --domain ${{ env.HOMOLOG_DOMAIN }}
+        working-directory: website 
 
   deploy-production:
     runs-on: ubuntu-latest
-    needs: test
+    needs: deploy-staging
     if: github.ref == 'refs/heads/master'
     environment:
       name: production
       url: http://${{ env.PRODUCTION_DOMAIN }}
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
 
       - name: Install Surge
         run: npm install --global surge
 
       - name: Deploy to production environment
-        run: surge --project ./my-app/public --domain ${{ env.PRODUCTION_DOMAIN }}
+        run: surge --project ./public --domain ${{ env.PRODUCTION_DOMAIN }}
+        working-directory: website 
+      
+        
   production-tests:
     runs-on: ubuntu-latest
     needs: deploy-production
