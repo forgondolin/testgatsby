@@ -52,7 +52,7 @@ jobs:
         with:
           name: website
           path: | 
-            ./public
+            public
             ./.cache
 
   test:
