@@ -9,6 +9,8 @@ on:
       - '*'
 
 env:
+  SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
+  SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
   HOMOLOG_DOMAIN: http://rapid-cave-hml.surge.sh/
   PRODUCTION_DOMAIN: http://rapid-cave.surge.sh/
 
