@@ -59,6 +59,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
@@ -73,7 +75,7 @@ jobs:
           gatsby serve &
           sleep 3
           curl "http://localhost:9000" | tac | tac | grep -q "Gatsby"
-        working-directory: "${{ github.workspace }}"
+        working-directory: .
         continue-on-error: true  
         
 
