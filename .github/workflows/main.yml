@@ -97,7 +97,7 @@ jobs:
         run: npm install --global surge
 
       - name: Deploy to review environment
-        run: surge --project ./public --domain ${{ env.HOMOLOG_DOMAIN }}
+        run: surge --project "${{ github.workspace }}/public" --domain ${{ env.HOMOLOG_DOMAIN }}
         
 
   deploy-staging:
@@ -116,7 +116,6 @@ jobs:
 
       - name: Deploy to staging environment
         run: surge --project ./public --domain ${{ env.HOMOLOG_DOMAIN }}
-        working-directory: ./public
         
 
   deploy-production:
@@ -135,7 +134,7 @@ jobs:
 
       - name: Deploy to production environment
         run: surge --project ./public --domain ${{ env.PRODUCTION_DOMAIN }}
-        working-directory: ./public
+        
       
         
   production-tests:
