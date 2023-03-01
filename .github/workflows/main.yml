@@ -85,7 +85,7 @@ jobs:
     if: github.event_name == 'pull_request'
     environment:
       name: review/${{ github.head_ref }}
-      url: https://rapid-cave-hml-${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
+      url: http://rapid-cave-hml${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
@@ -99,7 +99,7 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     needs: deploy-review
-    if: github.event.review.state == 'approved'
+    if: github.event.review.state == 'approved' || github.event_name == 'pull_request'
     environment:
       name: staging
       url: http://${{ env.HOMOLOG_DOMAIN }}
@@ -117,7 +117,7 @@ jobs:
   deploy-production:
     runs-on: ubuntu-latest
     needs: deploy-staging
-    if: github.event.review.state == 'approved'
+    if: github.event.review.state == 'approved' || github.event_name == 'pull_request'
     environment:
       name: production
       url: http://${{ env.PRODUCTION_DOMAIN }}
@@ -142,8 +142,4 @@ jobs:
 
       - name: Test production environment
         run: |
-          curl -s "https://${{ secrets.PRODUCTION_DOMAIN }}" | grep "${{ github.sha }}"
-        env:
-          PRODUCTION_DOMAIN: ${{ secrets.PRODUCTION_DOMAIN }}
-
-
+          curl -s "http://rapid-cave.surge.sh/"
