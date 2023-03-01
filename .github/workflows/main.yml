@@ -23,6 +23,14 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '18.x'
+      
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: npm install
@@ -54,7 +62,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v2
         with:
-          name: test
+          name: build
           path: ./public
 
       - name: Test artifact
