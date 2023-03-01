@@ -52,8 +52,8 @@ jobs:
         with:
           name: website
           path: | 
-           public
-           ./.cache
+            ./public
+            ./.cache
 
   test:
     needs: build
@@ -89,7 +89,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
       - name: Install Surge
         run: npm install --global surge
 
