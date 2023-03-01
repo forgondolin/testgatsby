@@ -85,7 +85,7 @@ jobs:
     if: github.event_name == 'pull_request'
     environment:
       name: review/${{ github.head_ref }}
-      url: https://rapid-cave-hml-${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
+      url: https://rapid-cave-hml${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
