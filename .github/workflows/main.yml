@@ -34,7 +34,7 @@ jobs:
         run: |
           echo ${{ github.sha }}
           gatsby build
-          sed -i "s/%%VERSION%%/${{ github.sha }}/" ./public/index.html
+          sed -i "s/%%VERSION%%/${{ github.sha }}/" ./my-app/public/index.html
         working-directory: ./my-app
 
       - name: Archive artifacts
