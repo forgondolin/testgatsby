@@ -142,4 +142,4 @@ jobs:
 
       - name: Test production environment
         run: |
-          curl -s "http://rapid-cave.surge.sh/"
+          curl -s "${{ env.PRODUCTION_DOMAIN }}"
