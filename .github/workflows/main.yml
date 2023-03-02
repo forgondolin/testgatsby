@@ -11,8 +11,8 @@ on:
 env:
   SURGE_LOGIN: ${{ secrets.SURGE_LOGIN }}
   SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
-  HOMOLOG_DOMAIN: http://rapid-cave-hml.surge.sh/
-  PRODUCTION_DOMAIN: http://rapid-cave.surge.sh/
+  HOMOLOG_DOMAIN: saobernardomaior-hml.surge.sh/
+  PRODUCTION_DOMAIN: saobernardomaior.surge.sh/
 
 jobs:
   build:
@@ -85,7 +85,7 @@ jobs:
     if: github.event_name == 'pull_request'
     environment:
       name: review/${{ github.head_ref }}
-      url: http://rapid-cave-hml${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
+      url: http://saobernardomaior-hml${{ env.GITHUB_HEAD_REF_SLUG }}.surge.sh
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
@@ -142,4 +142,4 @@ jobs:
 
       - name: Test production environment
         run: |
-          curl -s "${{ env.PRODUCTION_DOMAIN }}"
+          curl -s "http://${{ env.PRODUCTION_DOMAIN }}"
